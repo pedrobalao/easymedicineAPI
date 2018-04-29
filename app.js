@@ -26,6 +26,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var unitiesRouter = require('./routes/unities');
 var drugsRouter = require('./routes/drugs');
+var categoriesRouter = require('./routes/categories');
 var cors = require('cors')
 
 var app = express();
@@ -53,6 +54,7 @@ app.use(baseurl+'/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(v1+'/users', usersRouter);
 app.use(v1+'/unities', unitiesRouter);
 app.use(v1+'/drugs', drugsRouter);
+app.use(v1+'/categories', categoriesRouter);
 
 
 // catch 404 and forward to error handler
