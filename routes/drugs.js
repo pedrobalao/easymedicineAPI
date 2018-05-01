@@ -1,6 +1,8 @@
 var express = require('express');
 var sql = require('mssql');
 var math = require('mathjs');
+var Math = require('mathjs');
+var formutils = require('../utils/formulasutil');
 var router = express.Router();
 
 
@@ -115,7 +117,6 @@ router.get('/:id/calculation', function(req, res, next) {
     var request = new sql.Request();
 
     let drugid = req.params.id;
-
     let data = req.query.data;
 
     request.query('select "Function" formula, ResultDescription, ResultIdUnit, Description from smartwalletservice.Calculation a ' +
@@ -126,27 +127,37 @@ router.get('/:id/calculation', function(req, res, next) {
                           res.status(500).send(err.message);
                           return;
                         }
-                        let ret = [];
                         
+                        try
+                        {
+                            let ret = [];
+                            
+                            // var scope = {
+                            //     peso: 3
+                            // }; 
+                            
+                            console.log(data);
+                            // variables can be read from the scope
 
-                         var scope = {
-                            peso: 3
-                        }; 
-                        
-                        console.log(data);
-                        // variables can be read from the scope
-
-                        result.recordset.forEach((obj)=>{
-                            //obj.formula = 'peso * 30';
-                            console.log(math.eval(obj.formula, scope));
-                            let res = {
-                                resultdescription: obj.ResultDescription,
-                                resultunit: obj.ResultIdUnit//,
-                                //result: math.eval(obj.formula, data)
-                            };
-                            ret.push(res);
-                        });
-                        res.status(200).json(ret);
+                            result.recordset.forEach((obj)=>{
+                                console.log('Formula - '+obj.formula);
+                                obj.formula = formutils.convertToMathjs(obj.formula);
+                                console.log('Formula Mathjs- '+obj.formula);
+                                var dose = math.eval(obj.formula, data);
+                                let res = {
+                                    resultdescription: obj.ResultDescription,
+                                    resultunit: obj.ResultIdUnit,
+                                    result: dose
+                                };
+                                ret.push(res);
+                            });
+                            res.status(200).json(ret);
+                        }
+                        catch(error)
+                        {
+                            console.log(error);
+                            res.status(500).send(error);
+                        }
                     });
 });
 
