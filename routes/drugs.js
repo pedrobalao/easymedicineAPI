@@ -1,4 +1,5 @@
 var express = require('express');
+var url = require('url');
 var sql = require('mssql');
 var math = require('mathjs');
 var Math = require('mathjs');
@@ -114,12 +115,18 @@ router.get('/:id/variables', function(req, res, next) {
 });
 
 router.get('/:id/calculation', function(req, res, next) {
+    
+
     var request = new sql.Request();
 
+    console.log('Teste');
     let drugid = req.params.id;
-    let data = req.query.data;
+    console.log('data -> '+req.query.data);
+    //let data = JSON.parse(decodeURIComponent(req.query.data));
+    var data = JSON.parse(req.query.data);
+    console.log('data -> '+data);
 
-    request.query('select "Function" formula, ResultDescription, ResultIdUnit, Description from smartwalletservice.Calculation a ' +
+    request.query('select Id, "Function" formula, ResultDescription, ResultIdUnit, Description from smartwalletservice.Calculation a ' +
                     'where DrugId = ' + drugid + 'order by a.Id', 
                     function(err, result) {
                         if (err) {
@@ -145,6 +152,7 @@ router.get('/:id/calculation', function(req, res, next) {
                                 console.log('Formula Mathjs- '+obj.formula);
                                 var dose = math.eval(obj.formula, data);
                                 let res = {
+                                    id: obj.Id,
                                     resultdescription: obj.ResultDescription,
                                     resultunit: obj.ResultIdUnit,
                                     result: dose
