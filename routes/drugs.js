@@ -10,8 +10,16 @@ var router = express.Router();
 /* GET unities listing. */
 router.get('/', function(req, res, next) {
     var request = new sql.Request();
-    request.query('select Id,Name,ConterIndications,SecondaryEfects, ComercialBrands, Obs, Presentation' 
-        +' from smartwalletservice.Drug', function(err, result) {
+
+    let query = 'select Id,Name,ConterIndications,SecondaryEfects, ComercialBrands, Obs, Presentation' 
+    +' from smartwalletservice.Drug order by Name';
+
+    if(req.query.calculation === 'true'){
+        query = 'select distinct Id,Name,ConterIndications,SecondaryEfects, ComercialBrands, Obs, Presentation '
+         + 'from smartwalletservice.Drug a where a.Id in (select DrugId from smartwalletservice.Calculation) order by a.Name';
+    }
+    
+    request.query(query, function(err, result) {
         if (err) {
           console.error(err);
           res.status(500).send(err.message);
