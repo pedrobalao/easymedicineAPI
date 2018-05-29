@@ -100,6 +100,8 @@ router.get('/:id/calculation', function(req, res, next) {
     var data = JSON.parse(req.query.data);
     console.log('data -> '+data);
 
+
+
     request.query('select Id, Description, Formula, ResultUnitId, Observation, ResultType, Precision' 
                 +' from smartwalletservice.MedicalCalculation where Id = '+calcId, 
                     function(err, result) {
@@ -116,14 +118,10 @@ router.get('/:id/calculation', function(req, res, next) {
                             
                             result.recordset.forEach(obj => {
                                 console.log('Formula - '+obj.Formula);
-
-
-                                // variables can be read from the scope
-                                obj.Formula = formutils.convertToMathjs(obj.Formula);
                                 
-                                let ret= {};
+                                let result= formutils.calculate(data, obj.Formula);;
+
                                 if(obj.ResultType == 'NUMBER') {
-                                    var result = math.eval(obj.Formula, data);
                                     ret = {
                                         id: obj.Id,
                                         resultdescription: obj.Description,
@@ -131,7 +129,12 @@ router.get('/:id/calculation', function(req, res, next) {
                                         result: math.round(result, obj.Precision)
                                     };
                                 } else {
-                                    // TODO: run dynamic javascript
+                                    ret = {
+                                        id: obj.Id,
+                                        resultdescription: obj.Description,
+                                        resultunit: obj.ResultUnitId,
+                                        result: result
+                                    };
                                 }
                                 res.status(200).json(ret);
                                 return;

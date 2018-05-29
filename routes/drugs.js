@@ -156,9 +156,10 @@ router.get('/:id/calculation', function(req, res, next) {
 
                             result.recordset.forEach((obj)=>{
                                 console.log('Formula - '+obj.formula);
-                                obj.formula = formutils.convertToMathjs(obj.formula);
-                                console.log('Formula Mathjs- '+obj.formula);
-                                var dose = math.eval(obj.formula, data);
+                                // obj.formula = formutils.convertToMathjs(obj.formula);
+                                // console.log('Formula Mathjs- '+obj.formula);
+                                // var dose = math.eval(obj.formula, data);
+                                var dose = formutils.calculate(data,obj.formula);
                                 let res = {
                                     id: obj.Id,
                                     resultdescription: obj.ResultDescription,
