@@ -1,5 +1,7 @@
 var express = require('express');
 var sql = require('mssql');
+var math = require('mathjs');
+var formutils = require('../utils/formulasutil');
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
@@ -84,6 +86,63 @@ router.get('/:id/variables', function(req, res, next) {
                                 res.status(500).send(err.message);
                                 return;
                             });                        
+                    });
+});
+
+router.get('/:id/calculation', function(req, res, next) {
+    
+    var request = new sql.Request();
+
+    console.log('Teste');
+    let calcId = req.params.id;
+    console.log('data -> '+req.query.data);
+    //let data = JSON.parse(decodeURIComponent(req.query.data));
+    var data = JSON.parse(req.query.data);
+    console.log('data -> '+data);
+
+    request.query('select Id, Description, Formula, ResultUnitId, Observation, ResultType, Precision' 
+                +' from smartwalletservice.MedicalCalculation where Id = '+calcId, 
+                    function(err, result) {
+                        if (err) {
+                          console.error(err);
+                          res.status(500).send(err.message);
+                          return;
+                        }
+                        
+                        try
+                        {
+                            let obj = result.recordset;
+                            console.log(data);
+                            
+                            result.recordset.forEach(obj => {
+                                console.log('Formula - '+obj.Formula);
+
+
+                                // variables can be read from the scope
+                                obj.Formula = formutils.convertToMathjs(obj.Formula);
+                                
+                                let ret= {};
+                                if(obj.ResultType == 'NUMBER') {
+                                    var result = math.eval(obj.Formula, data);
+                                    ret = {
+                                        id: obj.Id,
+                                        resultdescription: obj.Description,
+                                        resultunit: obj.ResultUnitId,
+                                        result: math.round(result, obj.Precision)
+                                    };
+                                } else {
+                                    // TODO: run dynamic javascript
+                                }
+                                res.status(200).json(ret);
+                                return;
+                                
+                            });
+                        }
+                        catch(error)
+                        {
+                            console.log(error);
+                            res.status(500).send(error);
+                        }
                     });
 });
 
