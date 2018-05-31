@@ -2,6 +2,7 @@ var express = require('express');
 var sql = require('mssql');
 var router = express.Router();
 
+router.use(require('../auth/middleware'))
 
 /* GET unities listing. */
 router.get('/', function(req, res, next) {

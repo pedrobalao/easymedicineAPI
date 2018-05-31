@@ -27,10 +27,12 @@ var usersRouter = require('./routes/users');
 var unitiesRouter = require('./routes/unities');
 var drugsRouter = require('./routes/drugs');
 var categoriesRouter = require('./routes/categories');
+var authRouter = require('./routes/auth');
 var cors = require('cors')
-
+let dotenv = require('dotenv')
 var app = express();
 
+dotenv.config()
 app.use(cors())
 
 // view engine setup
@@ -43,7 +45,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 let baseurl = '/api';
 let v1 = baseurl+'/v1';
 
@@ -51,6 +52,7 @@ let v1 = baseurl+'/v1';
 app.use('/', indexRouter);
 app.use(baseurl+'/', indexRouter);
 app.use(baseurl+'/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(v1+'/auth', authRouter);
 app.use(v1+'/users', usersRouter);
 app.use(v1+'/unities', unitiesRouter);
 app.use(v1+'/drugs', drugsRouter);
