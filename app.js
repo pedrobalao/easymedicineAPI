@@ -28,6 +28,8 @@ var unitiesRouter = require('./routes/unities');
 var drugsRouter = require('./routes/drugs');
 var categoriesRouter = require('./routes/categories');
 var authRouter = require('./routes/auth');
+var medicalcalculationsRouter = require('./routes/medicalcalculations');
+
 var cors = require('cors')
 let dotenv = require('dotenv')
 var app = express();
@@ -57,6 +59,8 @@ app.use(v1+'/users', usersRouter);
 app.use(v1+'/unities', unitiesRouter);
 app.use(v1+'/drugs', drugsRouter);
 app.use(v1+'/categories', categoriesRouter);
+app.use(v1+'/medicalcalculations', medicalcalculationsRouter);
+
 
 
 // catch 404 and forward to error handler

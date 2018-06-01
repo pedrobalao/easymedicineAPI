@@ -11,8 +11,16 @@ router.use(require('../auth/middleware'))
 /* GET unities listing. */
 router.get('/', function(req, res, next) {
     var request = new sql.Request();
-    request.query('select Id,Name,ConterIndications,SecondaryEfects, ComercialBrands, Obs, Presentation' 
-        +' from smartwalletservice.Drug', function(err, result) {
+
+    let query = 'select Id,Name,ConterIndications,SecondaryEfects, ComercialBrands, Obs, Presentation' 
+    +' from smartwalletservice.Drug order by Name';
+
+    if(req.query.calculation === 'true'){
+        query = 'select distinct Id,Name,ConterIndications,SecondaryEfects, ComercialBrands, Obs, Presentation '
+         + 'from smartwalletservice.Drug a where a.Id in (select DrugId from smartwalletservice.Calculation) order by a.Name';
+    }
+    
+    request.query(query, function(err, result) {
         if (err) {
           console.error(err);
           res.status(500).send(err.message);
@@ -149,9 +157,10 @@ router.get('/:id/calculation', function(req, res, next) {
 
                             result.recordset.forEach((obj)=>{
                                 console.log('Formula - '+obj.formula);
-                                obj.formula = formutils.convertToMathjs(obj.formula);
-                                console.log('Formula Mathjs- '+obj.formula);
-                                var dose = math.eval(obj.formula, data);
+                                // obj.formula = formutils.convertToMathjs(obj.formula);
+                                // console.log('Formula Mathjs- '+obj.formula);
+                                // var dose = math.eval(obj.formula, data);
+                                var dose = formutils.calculate(data,obj.formula);
                                 let res = {
                                     id: obj.Id,
                                     resultdescription: obj.ResultDescription,
