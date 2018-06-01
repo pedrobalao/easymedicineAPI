@@ -117,8 +117,6 @@ router.get('/:id/calculation', function(req, res, next) {
                             console.log(data);
                             
                             result.recordset.forEach(obj => {
-                                console.log('Formula - '+obj.Formula);
-                                
                                 let result= formutils.calculate(data, obj.Formula);;
 
                                 if(obj.ResultType == 'NUMBER') {

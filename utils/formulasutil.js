@@ -7,10 +7,17 @@ module.exports = {
         var vars = '';
         var keyNames = Object.keys(input);
         keyNames.forEach(obj => {
-            vars = vars + 'var '+obj+'="'+input[obj]+'";\n'; 
+            if (isNaN(input[obj])) {
+                vars = vars + 'var '+obj+'="'+input[obj]+'";\n'; 
+            } else {
+                vars = vars + 'var '+obj+'='+input[obj]+';\n'; 
+            }
         });
-        // JSON.stringify(keyNames);
+        
+        console.log("vars -> "+input);
         vars = vars + formula;
+
+        console.log("formula -> "+vars);
         return eval(vars);
     }
   };
