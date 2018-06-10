@@ -6,21 +6,6 @@ var logger = require('morgan');
 var sql = require('mssql'); // MS Sql Server client
 var swaggerUi = require('swagger-ui-express'), swaggerDocument = require('./swagger.json');
 
-
-var secrets = require('./config/secrets');
-
-// Connection string parameters.
-var configdb = {
-    user: secrets.db.user,
-    password: secrets.db.password,
-    server: secrets.db.server,
-    database: secrets.db.database,
-    options: secrets.db.options
-};
-
-//instantiate a connection pool
-var conpool = new sql.connect(configdb);
-
 // load routers
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -79,7 +64,30 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+
+var secrets = require('./config/secrets');
+
+// Connection string parameters.
+var configdb = {
+    user: secrets.db.user,
+    password: secrets.db.password,
+    server: secrets.db.server,
+    database: secrets.db.database,
+    options: secrets.db.options,
+    pool: {
+      max: 20,
+      min: 2,
+      idleTimeoutMillis: 20000
+  }
+};
+
+//instantiate a connection pool
+var conpool = new sql.ConnectionPool(configdb, () => sql.connect(configdb, ));
+
+
+
 app.use(function(req,res,next){
+  console.info('Connecting...');
   conpool.connect().catch(function(err) {
     console.error('Error creating connection pool', err);
   });

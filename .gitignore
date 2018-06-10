@@ -63,3 +63,5 @@ typings/
 # secrets
 config/secrets.js
 config/easymedicine-firebase-adminsdk.json
+.env.prod
+.env.dev

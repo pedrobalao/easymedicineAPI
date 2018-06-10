@@ -2,10 +2,11 @@ var express = require('express');
 var sql = require('mssql');
 var router = express.Router();
 
-router.use(require('../auth/middleware'))
+// router.use(require('../auth/middleware'))
 
 /* GET unities listing. */
 router.get('/', function(req, res, next) {
+
     var request = new sql.Request();
     request.query('select Id, Description' 
         +' from smartwalletservice.ClinicalCategory order by Description', function(err, result) {
