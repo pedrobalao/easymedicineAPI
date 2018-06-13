@@ -4,7 +4,7 @@ var math = require('mathjs');
 var formutils = require('../utils/formulasutil');
 var router = express.Router();
 
-// router.use(require('../auth/middleware'))
+router.use(require('../auth/middleware'))
 
 router.get('/', function(req, res, next) {
     var request = new sql.Request();
