@@ -10,10 +10,10 @@ easymedicine API
 var secrets = {
   db:{
     config: {
-      user: 'easypeduser@easypedmysql',
-      password: 'easyPED!1',
-      host: 'easypedmysql.mysql.database.azure.com',
-      database: 'easypedprod',
+      user: 'USER',
+      password: 'PASSWORD',
+      host: 'HOST',
+      database: 'DB',
       ssl: true
     }
   }
