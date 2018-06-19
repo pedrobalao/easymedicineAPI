@@ -1,9 +1,9 @@
 var express = require('express');
 var url = require('url');
-var sql = require('mssql');
 var math = require('mathjs');
 var Math = require('mathjs');
 var formutils = require('../utils/formulasutil');
+var db = require('../utils/db');
 var router = express.Router();
 
 // router.use(require('../auth/middleware'))
@@ -11,67 +11,63 @@ var router = express.Router();
 
 /* GET unities listing. */
 router.get('/', function(req, res, next) {
-    var request = new sql.Request();
-
+    
     let query = 'select Id,Name,ConterIndications,SecondaryEfects, ComercialBrands, Obs, Presentation' 
-    +' from smartwalletservice.Drug order by Name';
+    +' from Drug order by Name';
 
     if(req.query.calculation === 'true'){
         query = 'select distinct Id,Name,ConterIndications,SecondaryEfects, ComercialBrands, Obs, Presentation '
-         + 'from smartwalletservice.Drug a where a.Id in (select DrugId from smartwalletservice.Calculation) order by a.Name';
+         + 'from Drug a where a.Id in (select DrugId from Calculation) order by a.Name';
     }
     
-    request.query(query, function(err, result) {
+    db.query(query, function(err, result, fields) {
         if (err) {
           console.error(err);
           res.status(500).send(err.message);
           return;
         }
-        res.status(200).json(result.recordset);
+        res.status(200).json(result);
     });
 });
 
 router.get('/search', function(req, res, next) {
-    var request = new sql.Request();
 
     let searchstr = req.query.searchstr.toUpperCase();
-    request.query('select distinct a.* from smartwalletservice.Drug a join smartwalletservice.Indication b on (a.Id = b.DrugId) ' +
+    db.query('select distinct a.* from Drug a join Indication b on (a.Id = b.DrugId) ' +
                     'where upper(Name) like \'%' 
                     + searchstr + '%\' or ComercialBrands like \'%'+searchstr+'%\' or upper(IndicationText) like \'%'+searchstr+'%\'', 
-                    function(err, result) {
+                    function(err, result, fields) {
                         if (err) {
                           console.error(err);
                           res.status(500).send(err.message);
                           return;
                         }
-                        res.status(200).json(result.recordset);
+                        res.status(200).json(result);
                     });
 });
 
 router.get('/:id', function(req, res, next) {
-    var request = new sql.Request();
 
     let drugid = req.params.id;
-    request.query('select distinct a.* from smartwalletservice.Drug a ' +
+    db.query('select distinct a.* from Drug a ' +
                     'where Id = '+drugid, 
-                    function(err, result) {
+                    function(err, result,fields)  {
                         if (err) {
                           console.error(err);
                           res.status(500).send(err.message);
                           return;
                         }
-                        res.status(200).json(result.recordset);
+                        res.status(200).json(result);
                     });
 });
 
 router.get('/:id/indications', function(req, res, next) {
-    var request = new sql.Request();
 
     let drugid = req.params.id;
      
-    request.query('select a.IndicationText, b.* from smartwalletservice.Indication a join smartwalletservice.Dose b on (a.Id = b.IndicationId)' +
+    db.query('select a.IndicationText, b.* from Indication a join Dose b on (a.Id = b.IndicationId)' +
                     'where DrugId = ' + drugid + 'order by a.Id', 
-                    function(err, result) {
+                    function(err, result,fields) {
                         if (err) {
                           console.error(err);
                           res.status(500).send(err.message);
@@ -80,7 +76,7 @@ router.get('/:id/indications', function(req, res, next) {
                         let lastIndication = '';
                         let ret = [];
                         let indcationCounter = -1;
-                        result.recordset.forEach((obj)=>{
+                        result.forEach((obj)=>{
                             console.log(obj);
                             if(!lastIndication || lastIndication != obj.IndicationText)
                             {
@@ -107,27 +103,24 @@ router.get('/:id/indications', function(req, res, next) {
 });
 
 router.get('/:id/variables', function(req, res, next) {
-    var request = new sql.Request();
 
     let drugid = req.params.id;
      
-    request.query('select a.Id, a.Description, a.IdUnit, a.Type from smartwalletservice.Variable a join smartwalletservice.VariableDrug b on (a.Id = b.VariableId)' +
+    db.query('select a.Id, a.Description, a.IdUnit, a.Type from Variable a join VariableDrug b on (a.Id = b.VariableId)' +
                     'where b.DrugId = ' + drugid + 'order by a.Id', 
-                    function(err, result) {
+                    function(err, result,fields) {
                         if (err) {
                           console.error(err);
                           res.status(500).send(err.message);
                           return;
                         }
 
-                        res.status(200).json(result.recordset);
+                        res.status(200).json(result);
                     });
 });
 
 router.get('/:id/calculation', function(req, res, next) {
     
-
-    var request = new sql.Request();
 
     console.log('Teste');
     let drugid = req.params.id;
@@ -136,9 +129,9 @@ router.get('/:id/calculation', function(req, res, next) {
     var data = JSON.parse(req.query.data);
     console.log('data -> '+data);
 
-    request.query('select Id, "Function" formula, ResultDescription, ResultIdUnit, Description from smartwalletservice.Calculation a ' +
+    db.query('select Id, "Function" formula, ResultDescription, ResultIdUnit, Description from Calculation a ' +
                     'where DrugId = ' + drugid + 'order by a.Id', 
-                    function(err, result) {
+                    function(err, result, fields) {
                         if (err) {
                           console.error(err);
                           res.status(500).send(err.message);
@@ -156,7 +149,7 @@ router.get('/:id/calculation', function(req, res, next) {
                             console.log(data);
                             // variables can be read from the scope
 
-                            result.recordset.forEach((obj)=>{
+                            result.forEach((obj)=>{
                                 console.log('Formula - '+obj.formula);
                                 // obj.formula = formutils.convertToMathjs(obj.formula);
                                 // console.log('Formula Mathjs- '+obj.formula);

@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var sql = require('mssql'); // MS Sql Server client
 var swaggerUi = require('swagger-ui-express'), swaggerDocument = require('./swagger.json');
+var mysql = require('mysql');
 
 // load routers
 var indexRouter = require('./routes/index');
@@ -73,25 +74,20 @@ var configdb = {
     password: secrets.db.password,
     server: secrets.db.server,
     database: secrets.db.database,
-    options: secrets.db.options,
-    pool: {
-      max: 20,
-      min: 2,
-      idleTimeoutMillis: 20000
-  }
 };
 
-//instantiate a connection pool
-var conpool = new sql.ConnectionPool(configdb, () => sql.connect(configdb, ));
-
-
-
-app.use(function(req,res,next){
-  console.info('Connecting...');
-  conpool.connect().catch(function(err) {
-    console.error('Error creating connection pool', err);
-  });
+//Database connection
+app.use(function(req, res, next){
+	global.connection = mysql.createConnection({
+		host     : configdb.server,
+		user     : configdb.user,
+		password : configdb.password,
+		database : configdb.database
+	});
+	connection.connect();
+	next();
 });
+
 
 
 

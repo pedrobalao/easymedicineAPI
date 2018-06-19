@@ -1,19 +1,18 @@
 var express = require('express');
-var sql = require('mssql');
+var db = require('../utils/db');
 var router = express.Router();
 
 // router.use(require('../auth/middleware'))
 
 /* GET unities listing. */
 router.get('/', function(req, res, next) {
-    var request = new sql.Request();
-    request.query('select Id from smartwalletservice.Unity', function(err, result) {
+    db.query('select Id from Unity', function(err, result,fields) {
         if (err) {
           console.error(err);
           res.status(500).send(err.message);
           return;
         }
-        res.status(200).json(result.recordset);
+        res.status(200).json(result);
     });
 });
 
