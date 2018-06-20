@@ -1,5 +1,5 @@
 var express = require('express');
-var sql = require('mssql');
+var db = require('../utils/db');
 var math = require('mathjs');
 var formutils = require('../utils/formulasutil');
 var router = express.Router();
@@ -7,41 +7,41 @@ var router = express.Router();
 router.use(require('../auth/middleware'))
 
 router.get('/', function(req, res, next) {
-    var request = new sql.Request();
-    request.query('select Id, Description, ResultUnitId, Observation, ResultType, Precision' 
-        +' from smartwalletservice.MedicalCalculation order by Description', function(err, result) {
+    
+    db.query('select Id, Description, ResultUnitId, Observation, ResultType, `Precision`' 
+        +' from MedicalCalculation order by Description', function(err, result,fields) {
         if (err) {
           console.error(err);
           res.status(500).send(err.message);
           return;
         }
-        res.status(200).json(result.recordset);
+        res.status(200).json(result);
     });
 });
 
 router.get('/:id', function(req, res, next) {
-    var request = new sql.Request();
+    
     let id = req.params.id;
-    request.query('select Id, Description, ResultUnitId, Observation, ResultType, Precision' 
-        +' from smartwalletservice.MedicalCalculation where Id = '+id, function(err, result) {
+    db.query('select Id, Description, ResultUnitId, Observation, ResultType, `Precision`' 
+        +' from MedicalCalculation where Id = '+id, function(err, result,fields) {
         if (err) {
           console.error(err);
           res.status(500).send(err.message);
           return;
         }
-        res.status(200).json(result.recordset);
+        res.status(200).json(result);
     });
 });
 
 router.get('/:id/variables', function(req, res, next) {
-    var request = new sql.Request();
+    
     let id = req.params.id;
 
     var funcGetVals = function(element) {
         return new Promise(function(resolve, reject) {
-            request.query('select Value from smartwalletservice.VariableValues a ' +
+            db.query('select Value from VariableValues a ' +
                                         'where VariableId = \'' + element.Id + '\' order by Value', 
-                                        function(err, result) {
+                                        function(err, result,fields) {
                                             if (err) {
                                               console.error(err);
                                               res.status(500).send(err.message);
@@ -53,7 +53,7 @@ router.get('/:id/variables', function(req, res, next) {
                                                 Description: element.Description, 
                                                 IdUnit: element.IdUnit, 
                                                 Type: element.Type,
-                                                Values: result.recordset 
+                                                Values: result 
                                             };
 
                                             resolve(ret);
@@ -62,9 +62,9 @@ router.get('/:id/variables', function(req, res, next) {
         });
     };
 
-    request.query('select a.Id, a.Description, a.IdUnit, a.Type from smartwalletservice.Variable a join smartwalletservice.VariableMedicalCalculation b on (a.Id = b.VariableId)' +
-                    'where b.MedicalCalculationId = ' + id + 'order by a.Id', 
-                    function(err, result) {
+    db.query('select a.Id, a.Description, a.IdUnit, a.Type from Variable a join VariableMedicalCalculation b on (a.Id = b.VariableId)' +
+                    'where b.MedicalCalculationId = ' + id + ' order by a.Id', 
+                    function(err, result,fields) {
                         if (err) {
                           console.error(err);
                           res.status(500).send(err.message);
@@ -73,7 +73,7 @@ router.get('/:id/variables', function(req, res, next) {
                         let variables = [];
                         let tasks = [];
                         
-                        variables = result.recordset;
+                        variables = result;
 
                         variables.forEach(element => {
                             tasks.push(funcGetVals(element));
@@ -93,7 +93,7 @@ router.get('/:id/variables', function(req, res, next) {
 
 router.get('/:id/calculation', function(req, res, next) {
     
-    var request = new sql.Request();
+    
 
     console.log('Teste');
     let calcId = req.params.id;
@@ -104,9 +104,9 @@ router.get('/:id/calculation', function(req, res, next) {
 
 
 
-    request.query('select Id, Description, Formula, ResultUnitId, Observation, ResultType, Precision' 
-                +' from smartwalletservice.MedicalCalculation where Id = '+calcId, 
-                    function(err, result) {
+    db.query('select Id, Description, Formula, ResultUnitId, Observation, ResultType, `Precision`' 
+                +' from MedicalCalculation where Id = '+calcId, 
+                    function(err, result,fields) {
                         if (err) {
                           console.error(err);
                           res.status(500).send(err.message);
@@ -115,10 +115,10 @@ router.get('/:id/calculation', function(req, res, next) {
                         
                         try
                         {
-                            let obj = result.recordset;
+                            let obj = result;
                             console.log(data);
                             
-                            result.recordset.forEach(obj => {
+                            result.forEach(obj => {
                                 let result= formutils.calculate(data, obj.Formula);;
 
                                 if(obj.ResultType == 'NUMBER') {
