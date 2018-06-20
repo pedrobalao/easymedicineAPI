@@ -66,7 +66,7 @@ router.get('/:id/indications', function(req, res, next) {
     let drugid = req.params.id;
      
     db.query('select a.IndicationText, b.* from Indication a join Dose b on (a.Id = b.IndicationId)' +
-                    'where DrugId = ' + drugid + 'order by a.Id', 
+                    'where DrugId = ' + drugid + ' order by a.Id', 
                     function(err, result,fields) {
                         if (err) {
                           console.error(err);
@@ -107,7 +107,7 @@ router.get('/:id/variables', function(req, res, next) {
     let drugid = req.params.id;
      
     db.query('select a.Id, a.Description, a.IdUnit, a.Type from Variable a join VariableDrug b on (a.Id = b.VariableId)' +
-                    'where b.DrugId = ' + drugid + 'order by a.Id', 
+                    'where b.DrugId = ' + drugid + ' order by a.Id', 
                     function(err, result,fields) {
                         if (err) {
                           console.error(err);
@@ -129,8 +129,8 @@ router.get('/:id/calculation', function(req, res, next) {
     var data = JSON.parse(req.query.data);
     console.log('data -> '+data);
 
-    db.query('select Id, "Function" formula, ResultDescription, ResultIdUnit, Description from Calculation a ' +
-                    'where DrugId = ' + drugid + 'order by a.Id', 
+    db.query('select Id, `Function`, ResultDescription, ResultIdUnit, Description from Calculation a ' +
+                    'where DrugId = ' + drugid + ' order by a.Id', 
                     function(err, result, fields) {
                         if (err) {
                           console.error(err);
@@ -150,11 +150,11 @@ router.get('/:id/calculation', function(req, res, next) {
                             // variables can be read from the scope
 
                             result.forEach((obj)=>{
-                                console.log('Formula - '+obj.formula);
+                                console.log('Formula - '+obj.Function);
                                 // obj.formula = formutils.convertToMathjs(obj.formula);
                                 // console.log('Formula Mathjs- '+obj.formula);
                                 // var dose = math.eval(obj.formula, data);
-                                var dose = formutils.calculate(data,obj.formula);
+                                var dose = formutils.calculate(data,obj.Function);
                                 let res = {
                                     id: obj.Id,
                                     resultdescription: obj.ResultDescription,

@@ -8,7 +8,7 @@ var router = express.Router();
 
 router.get('/', function(req, res, next) {
     
-    db.query('select Id, Description, ResultUnitId, Observation, ResultType, Precision' 
+    db.query('select Id, Description, ResultUnitId, Observation, ResultType, `Precision`' 
         +' from MedicalCalculation order by Description', function(err, result,fields) {
         if (err) {
           console.error(err);
@@ -22,7 +22,7 @@ router.get('/', function(req, res, next) {
 router.get('/:id', function(req, res, next) {
     
     let id = req.params.id;
-    db.query('select Id, Description, ResultUnitId, Observation, ResultType, Precision' 
+    db.query('select Id, Description, ResultUnitId, Observation, ResultType, `Precision`' 
         +' from MedicalCalculation where Id = '+id, function(err, result,fields) {
         if (err) {
           console.error(err);
@@ -63,7 +63,7 @@ router.get('/:id/variables', function(req, res, next) {
     };
 
     db.query('select a.Id, a.Description, a.IdUnit, a.Type from Variable a join VariableMedicalCalculation b on (a.Id = b.VariableId)' +
-                    'where b.MedicalCalculationId = ' + id + 'order by a.Id', 
+                    'where b.MedicalCalculationId = ' + id + ' order by a.Id', 
                     function(err, result,fields) {
                         if (err) {
                           console.error(err);
@@ -104,7 +104,7 @@ router.get('/:id/calculation', function(req, res, next) {
 
 
 
-    db.query('select Id, Description, Formula, ResultUnitId, Observation, ResultType, Precision' 
+    db.query('select Id, Description, Formula, ResultUnitId, Observation, ResultType, `Precision`' 
                 +' from MedicalCalculation where Id = '+calcId, 
                     function(err, result,fields) {
                         if (err) {
