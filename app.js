@@ -78,16 +78,16 @@ var configdb = {
 };
 
 //Database connection
-app.use(function(req, res, next){
-	global.connection = mysql.createConnection({
-		host     : configdb.server,
-		user     : configdb.user,
-		password : configdb.password,
-		database : configdb.database
-	});
-	connection.connect();
-	next();
-});
+// app.use(function(req, res, next){
+// 	global.connection = mysql.createConnection({
+// 		host     : configdb.server,
+// 		user     : configdb.user,
+// 		password : configdb.password,
+// 		database : configdb.database
+// 	});
+// 	connection.connect();
+// 	next();
+// });
 
 
 

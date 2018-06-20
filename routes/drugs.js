@@ -6,7 +6,7 @@ var formutils = require('../utils/formulasutil');
 var db = require('../utils/db');
 var router = express.Router();
 
-router.use(require('../auth/middleware'))
+//router.use(require('../auth/middleware'))
 
 
 /* GET unities listing. */
@@ -66,11 +66,7 @@ router.get('/:id/indications', function(req, res, next) {
     let drugid = req.params.id;
      
     db.query('select a.IndicationText, b.* from Indication a join Dose b on (a.Id = b.IndicationId)' +
-<<<<<<< HEAD
-                    'where DrugId = ' + drugid + 'order by a.Id', 
-=======
                     'where DrugId = ' + drugid + ' order by a.Id', 
->>>>>>> 5bd7b343f4e1b929f7354a93724f9f18be67a458
                     function(err, result,fields) {
                         if (err) {
                           console.error(err);
@@ -111,11 +107,7 @@ router.get('/:id/variables', function(req, res, next) {
     let drugid = req.params.id;
      
     db.query('select a.Id, a.Description, a.IdUnit, a.Type from Variable a join VariableDrug b on (a.Id = b.VariableId)' +
-<<<<<<< HEAD
-                    'where b.DrugId = ' + drugid + 'order by a.Id', 
-=======
                     'where b.DrugId = ' + drugid + ' order by a.Id', 
->>>>>>> 5bd7b343f4e1b929f7354a93724f9f18be67a458
                     function(err, result,fields) {
                         if (err) {
                           console.error(err);
@@ -137,13 +129,8 @@ router.get('/:id/calculation', function(req, res, next) {
     var data = JSON.parse(req.query.data);
     console.log('data -> '+data);
 
-<<<<<<< HEAD
-    db.query('select Id, "Function" formula, ResultDescription, ResultIdUnit, Description from Calculation a ' +
-                    'where DrugId = ' + drugid + 'order by a.Id', 
-=======
     db.query('select Id, `Function`, ResultDescription, ResultIdUnit, Description from Calculation a ' +
                     'where DrugId = ' + drugid + ' order by a.Id', 
->>>>>>> 5bd7b343f4e1b929f7354a93724f9f18be67a458
                     function(err, result, fields) {
                         if (err) {
                           console.error(err);
@@ -163,11 +150,7 @@ router.get('/:id/calculation', function(req, res, next) {
                             // variables can be read from the scope
 
                             result.forEach((obj)=>{
-<<<<<<< HEAD
-                                console.log('Formula - '+obj.formula);
-=======
                                 console.log('Formula - '+obj.Function);
->>>>>>> 5bd7b343f4e1b929f7354a93724f9f18be67a458
                                 // obj.formula = formutils.convertToMathjs(obj.formula);
                                 // console.log('Formula Mathjs- '+obj.formula);
                                 // var dose = math.eval(obj.formula, data);
