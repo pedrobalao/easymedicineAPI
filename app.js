@@ -67,6 +67,7 @@ app.use(function(err, req, res, next) {
 
 
 var secrets = require('./config/secrets');
+global.secrets = secrets
 
 // Connection string parameters.
 var configdb = {

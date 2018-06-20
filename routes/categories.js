@@ -2,7 +2,7 @@ var express = require('express');
 var db = require('../utils/db');
 var router = express.Router();
 
-// router.use(require('../auth/middleware'))
+router.use(require('../auth/middleware'))
 
 /* GET unities listing. */
 router.get('/', function(req, res, next) {
