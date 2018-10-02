@@ -15,6 +15,7 @@ var drugsRouter = require('./routes/drugs');
 var categoriesRouter = require('./routes/categories');
 var authRouter = require('./routes/auth');
 var medicalcalculationsRouter = require('./routes/medicalcalculations');
+var surgeryreferralRouter =  require('./routes/surgeryreferral');
 
 var cors = require('cors')
 let dotenv = require('dotenv')
@@ -46,7 +47,7 @@ app.use(v1+'/unities', unitiesRouter);
 app.use(v1+'/drugs', drugsRouter);
 app.use(v1+'/categories', categoriesRouter);
 app.use(v1+'/medicalcalculations', medicalcalculationsRouter);
-
+app.use(v1+'/surgeryreferral', surgeryreferralRouter);
 
 
 // catch 404 and forward to error handler
