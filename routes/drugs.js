@@ -157,6 +157,7 @@ router.get('/:id/calculation', function(req, res, next) {
                                 var dose = formutils.calculate(data,obj.Function);
                                 let res = {
                                     id: obj.Id,
+                                    description: obj.Description,
                                     resultdescription: obj.ResultDescription,
                                     resultunit: obj.ResultIdUnit,
                                     result: dose

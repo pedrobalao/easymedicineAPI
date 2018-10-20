@@ -16,6 +16,9 @@ var categoriesRouter = require('./routes/categories');
 var authRouter = require('./routes/auth');
 var medicalcalculationsRouter = require('./routes/medicalcalculations');
 var surgeryreferralRouter =  require('./routes/surgeryreferral');
+var weightRouter =  require('./routes/weight');
+var heightRouter =  require('./routes/height');
+
 
 var cors = require('cors')
 let dotenv = require('dotenv')
@@ -48,6 +51,9 @@ app.use(v1+'/drugs', drugsRouter);
 app.use(v1+'/categories', categoriesRouter);
 app.use(v1+'/medicalcalculations', medicalcalculationsRouter);
 app.use(v1+'/surgeryreferral', surgeryreferralRouter);
+app.use(v1+'/weight', weightRouter);
+app.use(v1+'/height', heightRouter);
+
 
 
 // catch 404 and forward to error handler
