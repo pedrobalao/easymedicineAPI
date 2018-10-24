@@ -73,41 +73,45 @@ router.get('/percentile/:gender/:birthdate/:weight', function(req, res, next) {
                         }
                         else if (weight<=Number(resultAge.P10))
                         {
-                            percentile = '10';       
+                            percentile = formutils.calcpercentile(5,resultAge.P5,10, resultAge.P10, weight);       
                         }
-                        else if (weight<=Number(resultAge.P15))
+                        else if (weight<Number(resultAge.P15))
                         {
-                            percentile = '15';       
+                            percentile = formutils.calcpercentile(10,resultAge.P10,15, resultAge.P15, weight);          
                         }
-                        else if (weight<=Number(resultAge.P25))
+                        else if (weight<Number(resultAge.P25))
                         {
-                            percentile = '25';       
+                            percentile = formutils.calcpercentile(15,resultAge.P15,25, resultAge.P25, weight);          
                         }
-                        else if (weight<=Number(resultAge.P50))
+                        else if (weight<Number(resultAge.P50))
                         {
-                            percentile = '50';       
+                            percentile = formutils.calcpercentile(25, resultAge.P25, 50, resultAge.P50, weight);     
                         }
-                        else if (weight<=Number(resultAge.P75))
+                        else if (weight<Number(resultAge.P75))
                         {
-                            percentile = '75';       
+                            percentile = formutils.calcpercentile(50, resultAge.P50, 75, resultAge.P75, weight);       
                         }
-                        else if (weight<=Number(resultAge.P85))
+                        else if (weight<Number(resultAge.P85))
                         {
-                            percentile = '85';       
+                            percentile = formutils.calcpercentile(75, resultAge.P75, 85, resultAge.P85, weight);     
                         }
-                        else if (weight<=Number(resultAge.P90))
+                        else if (weight<Number(resultAge.P90))
                         {
-                            percentile = '90';       
+                            percentile = formutils.calcpercentile(85, resultAge.P85, 90, resultAge.P90, weight);       
                         }
-                        else if (weight<=Number(resultAge.P95))
+                        else if (weight<Number(resultAge.P95))
+                        {
+                            percentile = formutils.calcpercentile(90, resultAge.P90, 95, resultAge.P95, weight);       
+                        }
+                        else if (weight<Number(resultAge.P97))
                         {
                             percentile = '95';       
                         }
-                        else if (weight<=Number(resultAge.P97))
+                        else if (weight<Number(resultAge.P99))
                         {
                             percentile = '97';       
                         }
-                        else if (weight<=Number(resultAge.P99))
+                        else if (weight<Number(resultAge.P999))
                         {
                             percentile = '99';       
                         }

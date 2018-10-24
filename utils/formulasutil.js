@@ -19,6 +19,22 @@ module.exports = {
 
         console.log("formula -> "+vars);
         return eval(vars);
+    },
+    calcpercentile: function (percentileL, valpL, percentileH, valpH, val ) {
+        let jumps = (Number(valpH) - Number(valpL))/(Number(percentileH) - Number(percentileL));
+        
+        let percentil = Number(percentileL);
+        let valPercentil = Number(valpL);
+        //console.log('jumps '+jumps);
+        //console.log(valPercentil +' '+ percentil+' '+ val);
+        while (val >= valPercentil) {
+            //console.log(valPercentil +' '+ percentil);
+            valPercentil = valPercentil + jumps;
+            percentil = percentil + 1;
+            //console.log('new ' + valPercentil +' '+ percentil);
+        }
+        //console.log(percentileL +' '+ valpL +' '+ percentileH +' '+ valpH +' '+ val)
+        return percentil;
     }
   };
   

@@ -55,53 +55,53 @@ router.get('/percentile/:gender/:birthdate/:height', function(req, res, next) {
                         resultAge = result[0];
 
                         console.debug('P01 - '+Number(resultAge.P01));
-                        if (height<Number(resultAge.P01))
+                        if (height<=Number(resultAge.P01))
                         {
                             percentile = '0.1';       
                         }
-                        else if (height<Number(resultAge.P1))
-                        {
-                            percentile = '0.1';       
-                        }
-                        else if (height<Number(resultAge.P3))
+                        else if (height<=Number(resultAge.P1))
                         {
                             percentile = '1';       
                         }
-                        else if (height<Number(resultAge.P5))
+                        else if (height<=Number(resultAge.P3))
                         {
                             percentile = '3';       
                         }
-                        else if (height<Number(resultAge.P10))
+                        else if (height<=Number(resultAge.P5))
                         {
                             percentile = '5';       
                         }
+                        else if (height<=Number(resultAge.P10))
+                        {
+                            percentile = formutils.calcpercentile(5,resultAge.P5,10, resultAge.P10, height);       
+                        }
                         else if (height<Number(resultAge.P15))
                         {
-                            percentile = '10';       
+                            percentile = formutils.calcpercentile(10,resultAge.P10,15, resultAge.P15, height);          
                         }
                         else if (height<Number(resultAge.P25))
                         {
-                            percentile = '15';       
+                            percentile = formutils.calcpercentile(15,resultAge.P15,25, resultAge.P25, height);          
                         }
                         else if (height<Number(resultAge.P50))
                         {
-                            percentile = '25';       
+                            percentile = formutils.calcpercentile(25, resultAge.P25, 50, resultAge.P50, height);     
                         }
                         else if (height<Number(resultAge.P75))
                         {
-                            percentile = '50';       
+                            percentile = formutils.calcpercentile(50, resultAge.P50, 75, resultAge.P75, height);       
                         }
                         else if (height<Number(resultAge.P85))
                         {
-                            percentile = '75';       
+                            percentile = formutils.calcpercentile(75, resultAge.P75, 85, resultAge.P85, height);     
                         }
                         else if (height<Number(resultAge.P90))
                         {
-                            percentile = '85';       
+                            percentile = formutils.calcpercentile(85, resultAge.P85, 90, resultAge.P90, height);       
                         }
                         else if (height<Number(resultAge.P95))
                         {
-                            percentile = '90';       
+                            percentile = formutils.calcpercentile(90, resultAge.P90, 95, resultAge.P95, height);       
                         }
                         else if (height<Number(resultAge.P97))
                         {
