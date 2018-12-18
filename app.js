@@ -18,6 +18,7 @@ var medicalcalculationsRouter = require('./routes/medicalcalculations');
 var surgeryreferralRouter =  require('./routes/surgeryreferral');
 var weightRouter =  require('./routes/weight');
 var heightRouter =  require('./routes/height');
+var bmiRouter =  require('./routes/bmi');
 
 
 var cors = require('cors')
@@ -53,7 +54,7 @@ app.use(v1+'/medicalcalculations', medicalcalculationsRouter);
 app.use(v1+'/surgeryreferral', surgeryreferralRouter);
 app.use(v1+'/weight', weightRouter);
 app.use(v1+'/height', heightRouter);
-
+app.use(v1+'/bmi', bmiRouter);
 
 
 // catch 404 and forward to error handler
