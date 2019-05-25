@@ -93,16 +93,12 @@ router.get('/:id/variables', function(req, res, next) {
 
 router.get('/:id/calculation', function(req, res, next) {
     
-    
-
     console.log('Teste');
     let calcId = req.params.id;
     console.log('data -> '+req.query.data);
     //let data = JSON.parse(decodeURIComponent(req.query.data));
     var data = JSON.parse(req.query.data);
     console.log('data -> '+data);
-
-
 
     db.query('select Id, Description, Formula, ResultUnitId, Observation, ResultType, `Precision`' 
                 +' from MedicalCalculation where Id = '+calcId, 
