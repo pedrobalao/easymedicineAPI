@@ -81,7 +81,7 @@ router.get("/gentoken", function(req, res, next) {
   res.status(200).json(ret);
 });
 
-router.get("/:id", async function(req, res, next) {
+router.get("/:id", function(req, res, next) {
   let id = req.params.id;
   let token = req.query.token;
   let iv = req.query.iv;
@@ -124,19 +124,6 @@ router.get("/:id", async function(req, res, next) {
     res.status(401).send("Unauthorize");
     return;
   }
-//   console.log('b1');
-//   let url = await awsHelper.getObjectUrl(
-//     'easyped',
-//     'easyPedDBV16.db3.zip'
-//   );
-//   console.log('b2 - '+url);
-//   let file = {
-//     id: result[0].id,
-//     name: result[0].awskey,
-//     url: url
-//   };
-
-//   res.status(200).json(file);
 
   db.query(
     "select id, minappversion, maxappversion, bucket, awskey from appdbversions where id = " +
@@ -152,22 +139,19 @@ router.get("/:id", async function(req, res, next) {
       console.log('a1');
       console.log(awsHelper.getObjectUrl);
 
-      const urlProm = awsHelper.getObjectUrl(
+      let url = awsHelper.getObjectUrl(
         result[0].bucket,
         result[0].awskey
       );
 
-      console.log(urlProm);
-      urlProm.then((data) => {
-        let file = {
-            id: result[0].id,
-            name: result[0].awskey,
-            url: data
-          };
-        
-        console.log('a2 - '+url);  
-        res.status(200).json(file);  
-      });
+      let file = {
+        id: result[0].id,
+        name: result[0].awskey,
+        url: url
+      };
+
+      console.log(url);
+      res.status(200).json(file);  
     }
   );
 
