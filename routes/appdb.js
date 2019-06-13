@@ -53,7 +53,7 @@ router.get("/gentoken", function(req, res, next) {
   let date = moment.utc().format("YYYYMMDDHHmmss");
 
   let str = JSON.stringify({
-    id: 17,
+    id: 18,
     app: "easyPed",
     date: date
   });
