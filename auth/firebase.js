@@ -1,14 +1,13 @@
 
 var admin = require('firebase-admin');
 
-var serviceAccount = require("../config/easymedicine-firebase-adminsdk.json");
-
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.applicationDefault(),
   databaseURL: process.env.FIREBASE_DATABASE_URL
 });
 
 
 module.exports = function(token) {
+    console.log(token);
     return admin.auth().verifyIdToken(token);
 }

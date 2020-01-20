@@ -1,3 +1,7 @@
+
+let dotenv = require('dotenv')
+dotenv.config()
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -6,6 +10,7 @@ var logger = require('morgan');
 var sql = require('mssql'); // MS Sql Server client
 var swaggerUi = require('swagger-ui-express'), swaggerDocument = require('./swagger.json');
 var mysql = require('mysql');
+const authmid = require('./auth/middleware')
 
 // load routers
 var indexRouter = require('./routes/index');
@@ -20,13 +25,11 @@ var weightRouter =  require('./routes/weight');
 var heightRouter =  require('./routes/height');
 var bmiRouter =  require('./routes/bmi');
 var appdbRouter =  require('./routes/appdb');
+var diseasesRouter =  require('./routes/diseases');
 
 
 var cors = require('cors')
-let dotenv = require('dotenv')
 var app = express();
-
-dotenv.config()
 app.use(cors())
 
 // view engine setup
@@ -57,6 +60,7 @@ app.use(v1+'/weight', weightRouter);
 app.use(v1+'/height', heightRouter);
 app.use(v1+'/bmi', bmiRouter);
 app.use(v1+'/appdb', appdbRouter);
+app.use(v1+'/diseases', authmid, diseasesRouter);
 
 
 
@@ -80,27 +84,13 @@ app.use(function(err, req, res, next) {
 var secrets = require('./config/secrets');
 global.secrets = secrets
 
-// Connection string parameters.
-var configdb = {
-    user: secrets.db.user,
-    password: secrets.db.password,
-    server: secrets.db.server,
-    database: secrets.db.database,
-};
-
-//Database connection
-// app.use(function(req, res, next){
-// 	global.connection = mysql.createConnection({
-// 		host     : configdb.server,
-// 		user     : configdb.user,
-// 		password : configdb.password,
-// 		database : configdb.database
-// 	});
-// 	connection.connect();
-// 	next();
-// });
-
-
+// // Connection string parameters.
+// var configdb = {
+//     user: secrets.db.user,
+//     password: secrets.db.password,
+//     server: secrets.db.server,
+//     database: secrets.db.database,
+// };
 
 
 module.exports = app;

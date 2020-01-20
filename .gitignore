@@ -61,7 +61,10 @@ typings/
 .next
 
 # secrets
-config/secrets.js
+#config/secrets.js
 config/easymedicine-firebase-adminsdk.json
 .env.prod
 .env.dev
+
+BaltimoreCyberTrustRoot.crt.pem
+easyped-firebase-adminsdk.json

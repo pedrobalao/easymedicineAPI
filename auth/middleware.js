@@ -1,8 +1,6 @@
 var firebaseAuth = require('./firebase')
-var mobileAuth = require('./mobile')
 
 module.exports = function (req, res, next) {
-    if (mobileAuth.isMobileApplication(req)) return next()
     if (req.headers.authorization === undefined) {
         return res.status(401).send({msg: 'Invalid token'})
     }
