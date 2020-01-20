@@ -10,9 +10,13 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  imageName: 'easypedapi'
-  dockerid: 'easymedicine.azurecr.io'
-  appname: 'easypedapi'
+  - group: Production
+  - name: imageName
+    value: 'easypedapi'
+  - name: dockerid
+    value: 'easymedicine.azurecr.io'
+  - name: appname
+    value: 'easypedapi'
 
 steps:
 - task: NodeTool@0
