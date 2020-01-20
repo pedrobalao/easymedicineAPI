@@ -6,48 +6,44 @@
 trigger:
   - master
   
-  pool:
-    vmImage: 'ubuntu-latest'
-  
-  variables:
-    imageName: 'easypedapi'
-    dockerid: 'easymedicine.azurecr.io'
-    appname: 'easypedapi'
-  
-  steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '10.x'
-    displayName: 'Install Node.js'
-  - script: 
-      echo $(DB_HOST)
+pool:
+  vmImage: 'ubuntu-latest'
 
-  - script: |
-      echo '{"type": "service_account",' > easyped-firebase-adminsdk.json
-      echo '"project_id": "$(FIREBASE_PROJECT_ID)",' >> easyped-firebase-adminsdk.json
-      echo '"private_key_id": "$(FIREBASE_PRIVATE_KEY_ID)",' >> easyped-firebase-adminsdk.json
-      echo '"private_key": "$(FIREBASE_PRIVATE_KEY)",' >> easyped-firebase-adminsdk.json
-      echo '"client_email": "$(FIREBASE_CLIENT_EMAIL)",' >> easyped-firebase-adminsdk.json
-      echo '"client_id": "$(FIREBASE_CLIENT_ID)",' >> easyped-firebase-adminsdk.json
-      echo '"auth_uri": "https://accounts.google.com/o/oauth2/auth",' >> easyped-firebase-adminsdk.json
-      echo '"token_uri": "https://oauth2.googleapis.com/token",' >> easyped-firebase-adminsdk.json
-      echo '"auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",' >> easyped-firebase-adminsdk.json
-      echo '"client_x509_cert_url": "$(FIREBASE_CLIENT_x509_CERT_URL)"}' >> easyped-firebase-adminsdk.json
+variables:
+  imageName: 'easypedapi'
+  dockerid: 'easymedicine.azurecr.io'
+  appname: 'easypedapi'
 
-  - script: |
-      echo 'DB_USER=$(DB_USER)' > .env
-      echo 'DB_PASSWORD=$(DB_PASSWORD)' >> .env
-      echo 'DB_HOST=$(DB_HOST)' >> .env
-      echo 'DB_DATABASE=$(DB_DATABASE)' >> .env
-      echo 'GOOGLE_APPLICATION_CREDENTIALS=easyped-firebase-adminsdk.json' >> .env
-      echo 'DBSECRETKEY=$(DBSECRETKEY)' >> .env
-      echo 'AWS_ACCESSKEYID=$(AWS_ACCESSKEYID)' >> .env
-      echo 'AWS_SECRETACCESSKEY=$(AWS_SECRETACCESSKEY)' >> .env
-
-  
-  - script: |
-      npm install
-      docker build -f Dockerfile -t $(dockerId)/$(imageName):latest .
-      docker login $(dockerId) -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
-      docker push $(dockerId)/$(imageName):latest
-    displayName: 'docker build'
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
+- script: 
+    echo $(DB_HOST)
+- script: |
+    echo '{"type": "service_account",' > easyped-firebase-adminsdk.json
+    echo '"project_id": "$(FIREBASE_PROJECT_ID)",' >> easyped-firebase-adminsdk.json
+    echo '"private_key_id": "$(FIREBASE_PRIVATE_KEY_ID)",' >> easyped-firebase-adminsdk.json
+    echo '"private_key": "$(FIREBASE_PRIVATE_KEY)",' >> easyped-firebase-adminsdk.json
+    echo '"client_email": "$(FIREBASE_CLIENT_EMAIL)",' >> easyped-firebase-adminsdk.json
+    echo '"client_id": "$(FIREBASE_CLIENT_ID)",' >> easyped-firebase-adminsdk.json
+    echo '"auth_uri": "https://accounts.google.com/o/oauth2/auth",' >> easyped-firebase-adminsdk.json
+    echo '"token_uri": "https://oauth2.googleapis.com/token",' >> easyped-firebase-adminsdk.json
+    echo '"auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",' >> easyped-firebase-adminsdk.json
+    echo '"client_x509_cert_url": "$(FIREBASE_CLIENT_x509_CERT_URL)"}' >> easyped-firebase-adminsdk.json
+- script: |
+    echo 'DB_USER=$(DB_USER)' > .env
+    echo 'DB_PASSWORD=$(DB_PASSWORD)' >> .env
+    echo 'DB_HOST=$(DB_HOST)' >> .env
+    echo 'DB_DATABASE=$(DB_DATABASE)' >> .env
+    echo 'GOOGLE_APPLICATION_CREDENTIALS=easyped-firebase-adminsdk.json' >> .env
+    echo 'DBSECRETKEY=$(DBSECRETKEY)' >> .env
+    echo 'AWS_ACCESSKEYID=$(AWS_ACCESSKEYID)' >> .env
+    echo 'AWS_SECRETACCESSKEY=$(AWS_SECRETACCESSKEY)' >> .env
+- script: |
+    npm install
+    docker build -f Dockerfile -t $(dockerId)/$(imageName):latest .
+    docker login $(dockerId) -u $(DOCKER_USERNAME) -p $(DOCKER_PASSWORD)
+    docker push $(dockerId)/$(imageName):latest
+  displayName: 'docker build'
