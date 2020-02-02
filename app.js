@@ -49,7 +49,7 @@ let v1 = baseurl+'/v1';
 app.use('/', indexRouter);
 app.use(baseurl+'/', indexRouter);
 app.use(baseurl+'/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use(v1+'/auth', authRouter);
+app.use(v1+'/auth', authmid, authRouter);
 app.use(v1+'/users', usersRouter);
 app.use(v1+'/unities', unitiesRouter);
 app.use(v1+'/drugs', drugsRouter);

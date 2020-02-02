@@ -6,6 +6,7 @@ module.exports = function (req, res, next) {
     }
     let token = req.headers.authorization.replace(/Bearer /i, '')
     firebaseAuth(token).then((decodedToken) => {
+        req.body.userid = decodedToken.uid
         next()
     }).catch(function(error) {
         res.status(401).send({msg: 'Invalid token'})
