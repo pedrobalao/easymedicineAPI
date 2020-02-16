@@ -48,10 +48,10 @@ router.get('/login', function(req, res, next) {
 });
 
 
-router.patch('/', function(req, res, next) {
+router.post('/usertype', function(req, res, next) {
   
-  let query = 'update firebase_users set (type, professional_id)' 
-  +' values(\''+req.body.type+'\',\''+req.body.professional_id+'\') where uid = \''+req.body.userid+'\'';
+  let query = 'update firebase_users set type = \''+req.body.type+'\', professional_id = \''+req.body.professional_id+'\'' 
+  +' where uid = \''+req.body.userid+'\'';
   
   db.query(query, function(err, result, fields) {
       if (err) {
@@ -59,8 +59,8 @@ router.patch('/', function(req, res, next) {
         res.status(500).send(err.message);
         return;
       }
-      res.status(200);
-      
+      res.status(200).json({success: true});;
+      return;
   });
 });
 
