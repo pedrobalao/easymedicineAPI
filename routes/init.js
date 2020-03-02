@@ -1,9 +1,10 @@
+var express = require('express');
 const swaggerUi = require('swagger-ui-express'), swaggerDocument = require('../swagger.json');
 const authmid = require('../auth/middleware')
 const baseurl = '/api';
 const v1 = baseurl + '/v1';
 
-module.exports = (app) => {
+module.exports = (app, router) => {
     app.use('/', require('../routes/index'));
     app.use(baseurl + '/', require('../routes/index'));
     app.use(baseurl + '/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -18,6 +19,7 @@ module.exports = (app) => {
     app.use(v1 + '/height', require('../routes/height'));
     app.use(v1 + '/bmi', require('../routes/bmi'));
     app.use(v1 + '/appdb', require('../routes/appdb'));
-    app.use(v1 + '/diseases', authmid, require('../routes/diseases'));
+
+    app.use(v1 + '/diseases', authmid, require('../routes/diseases')(express.Router()));
 }
 

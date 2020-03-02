@@ -1,9 +1,9 @@
-
 const dotenv = require('dotenv')
 dotenv.config()
 
 const appRoot = require('app-root-path');
 global.appRoot = appRoot;
+global.require = require('./config/srcfolder')
 
 const createError = require('http-errors');
 const express = require('express');
@@ -14,7 +14,7 @@ const morgan = require('morgan');
 const cors = require('cors')
 const app = express();
 
-const winston = require('./config/winston');
+const winston = global.require.use('Config/Winston');
 global.logger = winston;
 
 app.use(cors())
@@ -29,7 +29,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-require('./routes/init')(app)
+global.diContainer = require('./di/index')()
+
+global.require.use('Routes/Init')(app);
 
 // catch 404 and forward to error handler
 app.use(function (_req, _res, next) {
@@ -47,7 +49,7 @@ app.use((err, req, res, _next) => {
   res.render('error');
 });
 
-const secrets = require('./config/secrets');
+const secrets = global.require.use('Config/Secrets');
 global.secrets = secrets;
 
 module.exports = app;
