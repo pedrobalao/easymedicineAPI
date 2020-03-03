@@ -1,11 +1,12 @@
 const { ContainerBuilder } = require('node-dependency-injection');
+const repositoriesDILoad = require('./repositories');
+const controllersDILoad = require('./controllers');
+
 module.exports = () => {
     let diContainer = new ContainerBuilder();
-    diContainer.register('repository.disease', global.require.use('Api/Repositories/DiseasesRepository'));
 
-    diContainer.register('controller.disease',
-        global.require.use('Api/Controllers/DiseasesController'))
-        .addArgument(diContainer.get('repository.disease'));
+    diContainer = repositoriesDILoad(diContainer);
+    diContainer = controllersDILoad(diContainer);
 
     return diContainer;
 }
