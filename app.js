@@ -3,7 +3,7 @@ dotenv.config()
 
 const appRoot = require('app-root-path');
 global.appRoot = appRoot;
-global.require = require('./config/srcfolder')
+global.require = require('./config/require')
 
 const createError = require('http-errors');
 const express = require('express');
