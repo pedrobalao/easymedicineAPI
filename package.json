@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "app-root-path": "^3.0.0",
     "aws-sdk": "^2.464.0",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.4",
@@ -23,6 +24,8 @@
     "mssql": "^4.1.0",
     "mysql": "^2.15.0",
     "mysql2": "^1.5.3",
-    "swagger-ui-express": "^3.0.9"
+    "node-dependency-injection": "^2.6.2",
+    "swagger-ui-express": "^3.0.9",
+    "winston": "^3.2.1"
   }
 }

@@ -1,11 +1,9 @@
 const AWS = require("aws-sdk");
-const S3 = require("aws-sdk/clients/s3");
-const secrets = require("../config/secrets");
-const util = require("util");
+const secrets = require(`${global.appRoot}/config/secrets`);
 
 module.exports = {
-  getObjectUrl: function(bucket, key) {
-    console.log("bucket->"+bucket+" key->"+key);
+  getObjectUrl: function (bucket, key) {
+    global.logger.debug(`bucket->${bucket} key->${key}`);
 
     const s3 = new AWS.S3({
       region: "eu-west-3",

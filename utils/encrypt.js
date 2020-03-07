@@ -1,43 +1,41 @@
-var keySize = 256;
-var ivSize = 128;
-var saltSize = 256;
-var iterations = 1000;
-
-var message = "Does this work?";
-var password = "Secret Password";
+const keySize = 256;
+const ivSize = 128;
+const saltSize = 256;
+const iterations = 1000;
 
 export function encrypt(msg, pass) {
-    var salt = CryptoJS.lib.WordArray.random(saltSize / 8);
-    var key = CryptoJS.PBKDF2(pass, salt, {
+    const salt = CryptoJS.lib.WordArray.random(saltSize / 8);
+    const key = CryptoJS.PBKDF2(pass, salt, {
         keySize: keySize / 32,
         iterations: iterations
     });
-    var iv = CryptoJS.lib.WordArray.random(ivSize / 8);
-    var encrypted = CryptoJS.AES.encrypt(msg, key, {
+    const iv = CryptoJS.lib.WordArray.random(ivSize / 8);
+    const encrypted = CryptoJS.AES.encrypt(msg, key, {
         iv: iv,
         padding: CryptoJS.pad.Pkcs7,
         mode: CryptoJS.mode.CBC
     });
-    var encryptedHex = base64ToHex(encrypted.toString());
-    var base64result = hexToBase64(salt + iv + encryptedHex);
-    return base64result;
+    const encryptedHex = base64ToHex(encrypted.toString());
+    return hexToBase64(salt + iv + encryptedHex);
 }
+
 export function decrypt(transitmessage, pass) {
-    var hexResult = base64ToHex(transitmessage);
-    var salt = CryptoJS.enc.Hex.parse(hexResult.substr(0, 64));
-    var iv = CryptoJS.enc.Hex.parse(hexResult.substr(64, 32));
-    var encrypted = hexToBase64(hexResult.substring(96));
-    var key = CryptoJS.PBKDF2(pass, salt, {
+    const hexResult = base64ToHex(transitmessage);
+    const salt = CryptoJS.enc.Hex.parse(hexResult.substr(0, 64));
+    const iv = CryptoJS.enc.Hex.parse(hexResult.substr(64, 32));
+    const encrypted = hexToBase64(hexResult.substring(96));
+    const key = CryptoJS.PBKDF2(pass, salt, {
         keySize: keySize / 32,
         iterations: iterations
     });
-    var decrypted = CryptoJS.AES.decrypt(encrypted, key, {
+    const decrypted = CryptoJS.AES.decrypt(encrypted, key, {
         iv: iv,
         padding: CryptoJS.pad.Pkcs7,
         mode: CryptoJS.mode.CBC
     });
     return decrypted.toString(CryptoJS.enc.Utf8);
 }
+
 export function hexToBase64(str) {
     return btoa(String.fromCharCode.apply(null, str
         .replace(/\r|\n/g, "")
@@ -45,9 +43,10 @@ export function hexToBase64(str) {
         .replace(/ +$/, "")
         .split(" ")));
 }
+
 export function base64ToHex(str) {
-    for (var i = 0, bin = atob(str.replace(/[ \r\n]+$/, "")), hex = []; i < bin.length; ++i) {
-        var tmp = bin.charCodeAt(i).toString(16);
+    for (let i = 0, bin = atob(str.replace(/[ \r\n]+$/, "")), hex = []; i < bin.length; ++i) {
+        let tmp = bin.charCodeAt(i).toString(16);
         if (tmp.length === 1)
             tmp = "0" + tmp;
         hex[hex.length] = tmp;
