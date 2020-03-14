@@ -40,7 +40,7 @@ router.get('/search', function(req, res, next) {
 router.get('/:id', function(req, res, next) {
     console.log('getid')
     let id = req.params.id;
-    db.query('select id, description, author, indication, followup, example, bibliography, observation, created_at, updated_at, treatment_description, status' 
+    db.query('select id, description, author, indication, followup, example, bibliography, observation, created_at, updated_at, treatment_description, status, treatment, general_measures' 
         +' from diseases where status = \'active\' and id = '+id, 
                     function(err, result,fields)  {
                         if (err) {

@@ -84,13 +84,4 @@ app.use(function(err, req, res, next) {
 var secrets = require('./config/secrets');
 global.secrets = secrets
 
-// // Connection string parameters.
-// var configdb = {
-//     user: secrets.db.user,
-//     password: secrets.db.password,
-//     server: secrets.db.server,
-//     database: secrets.db.database,
-// };
-
-
 module.exports = app;
