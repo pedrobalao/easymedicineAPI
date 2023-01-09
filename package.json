@@ -14,7 +14,7 @@
     "dotenv": "^5.0.1",
     "ejs": "^3.0.1",
     "express": "~4.16.0",
-    "firebase-admin": "^5.13.1",
+    "firebase-admin": "^11.4.1",
     "http-errors": "~1.6.2",
     "jade": "~1.11.0",
     "mathjs": "^4.4.0",
