@@ -1,5 +1,5 @@
-# easymedicineAPI
-easymedicine API
+# easymedicineAPI (legacy)
+easyped API
 
 [![Build Status](https://pedrochavs.visualstudio.com/easypedapi/_apis/build/status/pedrobalao.easymedicineAPI%20(1)?branchName=master)](https://pedrochavs.visualstudio.com/easypedapi/_build/latest?definitionId=15&branchName=master)
 
